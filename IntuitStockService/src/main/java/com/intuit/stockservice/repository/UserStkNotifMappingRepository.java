@@ -14,4 +14,6 @@ import com.intuit.stockservice.model.UserStkNotifMapping;
 public interface UserStkNotifMappingRepository extends JpaRepository<UserStkNotifMapping, Long>{
 	
 	List<UserStkNotifMapping> findByUserId(long userId);
+	
+	List<UserStkNotifMapping> findBySubscriptionStatus(char subscriptionStatus);
 }

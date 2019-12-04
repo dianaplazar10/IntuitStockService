@@ -3,6 +3,8 @@ package com.intuit.stockservice.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -12,6 +14,8 @@ import com.intuit.stockservice.repository.StockRepository;
 
 @Component
 public class StockServiceImpl implements StockService {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(StockServiceImpl.class);
 	
 	@Autowired
 	private StockRepository stockRepository;

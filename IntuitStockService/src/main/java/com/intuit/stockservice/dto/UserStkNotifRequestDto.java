@@ -48,12 +48,12 @@ public class UserStkNotifRequestDto {
 	public UserStkNotifRequestDto(int userId, List<Integer> stkIds) {
 		this.userId = userId;
 		this.stockIds = stkIds;
-		this.notifSubsStatus = AppConstants.NOTIF_STAT_N;
+		this.notifSubsStatus = AppConstants.SUBSCR_STAT_N;
 	}
 	
 	public UserStkNotifRequestDto(int userId, List<Integer> stkIds, char notif ) {
 		this.userId = userId;
 		this.stockIds = stkIds;
-		this.notifSubsStatus = AppConstants.NOTIF_STAT_N;
+		this.notifSubsStatus = AppConstants.SUBSCR_STAT_N;
 	}
 }

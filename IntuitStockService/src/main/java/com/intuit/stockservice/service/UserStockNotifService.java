@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.intuit.stockservice.model.UserStkNotifMapping;
+
 @Service
 public interface UserStockNotifService {
 	
@@ -11,5 +13,10 @@ public interface UserStockNotifService {
 	void subscribeToNotification(int userId, int notificationId,
 			char notificationSubscrStatus,
 			int notificationFactor);
+	List<UserStkNotifMapping> getAllSubscribedMappings();
+	
+	List<UserStkNotifMapping> getAllNotificationForUser(int userId);
+	
+	void updateUSNmappings(List<UserStkNotifMapping> usnMappings);
 
 }

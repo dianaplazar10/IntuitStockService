@@ -1,7 +1,14 @@
 package com.intuit.stockservice.controller;
 
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -9,16 +16,16 @@ import org.springframework.web.bind.annotation.RestController;
 import com.intuit.stockservice.dto.AppConstants;
 import com.intuit.stockservice.dto.UserStkNotifRequestDto;
 import com.intuit.stockservice.exceptionhandlers.CustomRuntimeException;
+import com.intuit.stockservice.model.UserStkNotifMapping;
 import com.intuit.stockservice.service.UserStockNotifService;
 
 @RestController
 public class UserStkNotifMappingController {
 	
+	private static final Logger LOGGER = LoggerFactory.getLogger(UserStkNotifMappingController.class);
+	
 	@Autowired
 	private UserStockNotifService userStockNotifService;
-	
-	//addUserStocks
-	//subscribe_userIdNotifId	
 	
 	@PostMapping(value="/addstocks")
 	public ResponseEntity<Object> addStocksToUser(@RequestBody UserStkNotifRequestDto usnDto) {
@@ -40,11 +47,11 @@ public class UserStkNotifMappingController {
 		if(usnDto.getNotifId()<=0) {
 			throw new CustomRuntimeException("Invalid Notification Id");
 		}
-		if(!(usnDto.getNotifSubsStatus() == AppConstants.NOTIF_STAT_N 
-				|| usnDto.getNotifSubsStatus() == AppConstants.NOTIF_STAT_Y)) {
+		if(!(usnDto.getNotifSubsStatus() == AppConstants.SUBSCR_STAT_N 
+				|| usnDto.getNotifSubsStatus() == AppConstants.SUBSCR_STAT_Y)) {
 			throw new CustomRuntimeException("Invalid Subscription status value(notifSubsStatus). It should be either 'Y' or 'N'");
 		}
-		if((usnDto.getNotifSubsStatus() == AppConstants.NOTIF_STAT_Y)
+		if((usnDto.getNotifSubsStatus() == AppConstants.SUBSCR_STAT_Y)
 				&& (usnDto.getNotificationFactor()==0)) {
 			throw new CustomRuntimeException("Invalid Notification factor value(notificationFactor) : " 
 												+ usnDto.getNotificationFactor());
@@ -52,6 +59,15 @@ public class UserStkNotifMappingController {
 		userStockNotifService.subscribeToNotification(usnDto.getUserId(), 
 								usnDto.getNotifId(), usnDto.getNotifSubsStatus(),usnDto.getNotificationFactor());
 		return ResponseEntity.ok().build();
+	}
+	
+	@GetMapping(value="/usnMappings", produces = {MediaType.APPLICATION_JSON_VALUE})
+	public ResponseEntity<List<UserStkNotifMapping>> getAllMappings() {
+		List<UserStkNotifMapping> listOfUSNmappings = userStockNotifService.getAllSubscribedMappings();
+		if(listOfUSNmappings.isEmpty()) {
+			return ResponseEntity.noContent().build(); 
+		} 
+		return new ResponseEntity<List<UserStkNotifMapping>>(listOfUSNmappings,HttpStatus.OK);
 	}
 
 }

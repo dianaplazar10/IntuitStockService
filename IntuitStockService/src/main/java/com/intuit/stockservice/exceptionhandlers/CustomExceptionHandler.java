@@ -2,6 +2,8 @@ package com.intuit.stockservice.exceptionhandlers;
 
 import java.util.Date;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +14,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @ControllerAdvice
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(CustomExceptionHandler.class);
 	
 	@ExceptionHandler(value= {Exception.class})
 	public ResponseEntity<Object> handleAllAppException(Exception ex, WebRequest request) {

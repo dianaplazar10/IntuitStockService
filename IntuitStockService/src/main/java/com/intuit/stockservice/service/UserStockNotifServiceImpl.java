@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +19,8 @@ import com.intuit.stockservice.repository.UserStkNotifMappingRepository;
 @Component
 public class UserStockNotifServiceImpl implements UserStockNotifService {
 	
+	private static final Logger LOGGER = LoggerFactory.getLogger(UserStockNotifServiceImpl.class);
+
 	@Autowired
 	private UserStkNotifMappingRepository userStkNotifMappingRepository;
 	
@@ -37,7 +41,7 @@ public class UserStockNotifServiceImpl implements UserStockNotifService {
 				Stock stock = stocksMap.get((long)id);
 				UserStkNotifMapping usnMapping = new UserStkNotifMapping(
 						userId, id, AppConstants.INVALID_DEFAULT_NOTIFICATION_ID, 
-						AppConstants.NOTIF_STAT_Y, AppConstants.INVALID_DEFAULT_NOTIFICATION_FACTOR, 
+						AppConstants.SUBSCR_STAT_Y, AppConstants.INVALID_DEFAULT_NOTIFICATION_FACTOR, 
 						stock.getCurrentStockPrice());
 				listMappings.add(usnMapping);
 			}
@@ -73,6 +77,31 @@ public class UserStockNotifServiceImpl implements UserStockNotifService {
 		listMappings.forEach(record -> record.setUpdatedNotifFactor(notificationFactor));
 		if(!listMappings.isEmpty()) {
 			userStkNotifMappingRepository.saveAll(listMappings);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.intuit.stockservice.service.UserStockNotifService#getAllMappings()
+	 * 
+	 * @return only mappings that are subscribed
+	 */
+	@Override
+	public List<UserStkNotifMapping> getAllSubscribedMappings() {
+		List<UserStkNotifMapping> listOfMappings = userStkNotifMappingRepository.findBySubscriptionStatus(AppConstants.SUBSCR_STAT_Y);
+		return listOfMappings;
+	}
+
+	@Override
+	public List<UserStkNotifMapping> getAllNotificationForUser(int userId) {
+		List<UserStkNotifMapping> listOfMappings = userStkNotifMappingRepository.findByUserId(userId);
+		return listOfMappings;
+	}
+
+	@Override
+	public void updateUSNmappings(List<UserStkNotifMapping> usnMappings) {
+		if(!usnMappings.isEmpty()) {
+			userStkNotifMappingRepository.saveAll(usnMappings);
 		}
 	}
 }

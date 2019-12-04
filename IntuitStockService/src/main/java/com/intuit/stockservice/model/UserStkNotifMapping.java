@@ -13,6 +13,8 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.intuit.stockservice.dto.AppConstants;
+
 @Entity
 @Table(name="userStkNotifMapping")
 public class UserStkNotifMapping {
@@ -29,12 +31,15 @@ public class UserStkNotifMapping {
 	@NotNull
 	@Column(name = "stockid")
 	private long stkId;
-	
+
 	@Column(name = "notificationid")
 	private long notifId;
 	
 	@Column(name = "subscriptionStatus")
 	private char subscriptionStatus;
+	
+	@Column(name = "notifystatus")
+	private char notifyStatus = AppConstants.NOTIF_STAT_N;
 	
 	@Column(name = "updNotificationFactor")
 	private int updatedNotifFactor;
@@ -143,5 +148,13 @@ public class UserStkNotifMapping {
 
 	public void setUpdateDateTime(LocalDateTime updateDateTime) {
 		this.updateDateTime = updateDateTime;
+	}
+	
+	public char getNotifyStatus() {
+		return notifyStatus;
+	}
+
+	public void setNotifyStatus(char notifyStatus) {
+		this.notifyStatus = notifyStatus;
 	}
 }
